@@ -8,6 +8,8 @@
     <RouterLink class="px-4 py-6" to="/season-details/1408/1">season details</RouterLink>
     <RouterLink class="px-4 py-6" to="/movies/keyword/1701">keyword</RouterLink>
     <RouterLink class="px-4 py-6" to="/movies/category/28">category</RouterLink>
+    <!-- <RouterLink class="px-4 py-6" to="`/movie/${movie.id}`">Detalle Película</RouterLink> -->
+    <RouterLink class="px-4 py-6" to="/movie/1079091">Detalle Película</RouterLink>
   </nav>
   <main class="flex flex-col justify-center">
     <router-view></router-view>

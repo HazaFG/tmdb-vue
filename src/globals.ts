@@ -2,7 +2,8 @@ import HomeView from "./components/HomeView.vue"
 import CategoriesDetails from "./views/CategoriesDetails.vue";
 import KeywordDetails from "./views/KeywordDetails.vue";
 import MoviesFiltered from "./views/MoviesFiltered.vue";
-import SeasonDetails from "./views/SeasonDetails.vue"
+import SeasonDetails from "./views/SeasonDetails.vue";
+import MovieDetail from "./views/MovieDetail.vue";
 
 export const API_KEY = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMDkzNTJkOTljNDI5OGE5MGYzZDAyYTAxYTI2NTNkMyIsIm5iZiI6MTcyNzIzMTI5OC4yNzExOTYsInN1YiI6IjY2ZjJmNTgzYzIzNzI1OGU0YzI3MGEyNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.UrQp6o6lfxbmCDcLsyPbS1jo-DV5oq0Ncz-wSJ5730w"
 
@@ -12,6 +13,8 @@ export const ROUTES = [
   { path: '/movies', component: MoviesFiltered },
   { path: '/movies/keyword/:keyword_id', component: KeywordDetails },
   { path: '/movies/category/:category_id', component: CategoriesDetails },
+  { path: '/movie/:id', component: MovieDetail },
+
 ]
 
 const headers = new Headers();
