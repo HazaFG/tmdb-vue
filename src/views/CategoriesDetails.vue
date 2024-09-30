@@ -3,6 +3,7 @@ import { useRoute } from 'vue-router';
 import headers, { CATEGORIES, Movie, TVSeries } from '../globals';
 import { ref } from 'vue';
 import MovieLazyOverview from '../components/MovieLazyOverview.vue';
+import SearchHeaders from '../components/SearchHeaders.vue';
 
 const route = useRoute();
 const category: string = route.params.category_id as string
@@ -54,9 +55,6 @@ function popularityFilter(e: Event) {
 
 <template>
   <div class="flex flex-col p-2 sm:p-4 text-coffe-950 space-y-2 ">
-    <h1 class="font-bold text-center sm:text-left text-coal-700 text-xl p-4 my-4 bg-kirby-100 rounded">
-      search for '<span class="text-kirby-800">{{ CATEGORIES[category] }}</span>'
-    </h1>
     <div v-if="!isLoading && series?.length == 0 && movies?.length == 0"
       class="p-4  bg-kirby-900 rounded text-white font-bold text-2xl m-2 mx-auto sm:p-12 max-w-[720px] flex flex-col space-y-2 align-middle items-center">
       <h1>No hay nada para mostrar:(</h1>
@@ -65,18 +63,9 @@ function popularityFilter(e: Event) {
         alt="">
     </div>
     <div v-else-if="!isLoading" class="flex flex-col mx-auto space-y-2">
-      <span class="text-kirby-950 font-bold text-xl">Filter by</span>
-      <div class="flex justify-between sm:mr-auto sm:space-x-2">
-        <select v-on:change="sourceFilter" class="bg-kirby-900 text-kirby-50 w-fit rounded py-2 px-4 font-bold">
-          <option value="">Movies and TV</option>
-          <option value="movies">Movies</option>
-          <option value="tv">TV Series</option>
-        </select>
-        <select v-on:change="popularityFilter" class="bg-kirby-900 text-kirby-50 w-fit rounded py-2 px-4 font-bold">
-          <option value="most">Most popular</option>
-          <option value="least">Least popular</option>
-        </select>
-      </div>
+
+      <SearchHeaders :keyword-text="CATEGORIES[category]" :source-filter="sourceFilter"
+        :popularity-filter="popularityFilter" />
       <main class="rounded sm:p-12">
         <div v-if="filterByMoviesOrTV == 'movies' || filterByMoviesOrTV == ''" class="space-y-4 ">
           <MovieLazyOverview v-for="movie in movies" :media="movie" />

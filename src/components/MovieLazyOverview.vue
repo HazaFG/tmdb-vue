@@ -7,8 +7,7 @@ const imgBasePath: string = "https://image.tmdb.org/t/p/w500";
 
 <template>
   <div
-    class="flex shadow-md p-2 space-y-2 max-w-[1020px] bg-kirby-50 sm:p-6 rounded hover:scale-105 transition-all text-coal-800">
-
+    class="flex shadow-md p-2 space-y-2 max-w-[1020px] bg-kirby-50 sm:p-6 rounded hover:scale-105 transition-all text-coffee-950">
     <RouterLink class="min-w-[150px]" :to="'/' +
       (('release_date' in media)
         ? 'movies' : 'tv') + '/id/' + media.id">

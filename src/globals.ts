@@ -26,6 +26,7 @@ export default headers;
 export interface Category {
   [id: string]: string;
 }
+export const imgBasePath: string = "https://image.tmdb.org/t/p/w500";
 
 export const CATEGORIES: Category = {
   "28": "Action",
@@ -135,3 +136,4 @@ export interface Season {
   season_number: number
   vote_average: number
 }
+
