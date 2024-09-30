@@ -50,7 +50,9 @@ export const CATEGORIES: Category = {
 }
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
-export function formatDate(date: string): string {
+export function formatDate(date: string | undefined): string {
+  if (date == undefined)
+    return "Loading";
   const d = new Date(date);
   return `${months[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`
 }

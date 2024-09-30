@@ -85,14 +85,14 @@ function popularityFilter(e: Event) {
     <div v-else-if="!isLoading" class="flex flex-col align-top mx-auto space-y-2">
       <SearchHeaders :keyword-text="keywordText" :source-filter="sourceFilter" :popularity-filter="popularityFilter" />
 
-      <main class="rounded sm:p-12 h-screen">
+      <div class="rounded sm:p-12 space-y-12">
         <div v-if="movies && filterByMoviesOrTV == 'movies' || filterByMoviesOrTV == ''" class="space-y-4 ">
           <MovieLazyOverview v-for="movie in movies" :media="movie" />
         </div>
         <div v-if="series && filterByMoviesOrTV == 'tv' || filterByMoviesOrTV == ''" class="space-y-4">
           <MovieLazyOverview v-for="serie in series" :media="serie" />
         </div>
-      </main>
+      </div>
     </div>
   </div>
 </template>

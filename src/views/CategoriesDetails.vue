@@ -7,8 +7,8 @@ import SearchHeaders from '../components/SearchHeaders.vue';
 
 const route = useRoute();
 const category: string = route.params.category_id as string
-let movies = ref<Movie[]>()
-let series = ref<TVSeries[]>()
+let movies = ref<Movie[]>([])
+let series = ref<TVSeries[]>([])
 let isLoading = ref(true);
 const orderByPopularity = ref("");
 const filterByMoviesOrTV = ref("")
@@ -66,14 +66,14 @@ function popularityFilter(e: Event) {
 
       <SearchHeaders :keyword-text="CATEGORIES[category]" :source-filter="sourceFilter"
         :popularity-filter="popularityFilter" />
-      <main class="rounded sm:p-12">
-        <div v-if="filterByMoviesOrTV == 'movies' || filterByMoviesOrTV == ''" class="space-y-4 ">
+      <div class="rounded sm:p-12 space-y-6">
+        <div v-if="filterByMoviesOrTV == 'movies' || filterByMoviesOrTV == ''" class="space-y-4">
           <MovieLazyOverview v-for="movie in movies" :media="movie" />
         </div>
         <div v-if="filterByMoviesOrTV == 'tv' || filterByMoviesOrTV == ''" class="space-y-4">
           <MovieLazyOverview v-for="serie in series" :media="serie" />
         </div>
-      </main>
+      </div>
     </div>
   </div>
 </template>
