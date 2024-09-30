@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import headers from '../globals';
+import headers, { formatDate } from '../globals';
 import { ref } from 'vue';
 
 interface Movie {
@@ -52,21 +52,26 @@ async function getKeywordText(keyword: string) {
 </script>
 
 <template>
-  <div class="m-4">
-    <h1>
-      {{ keywordText }}
+
+  <div class="flex flex-col sm:p-4">
+    <h1 class="font-bold text-xl p-4 m-2 bg-coal-100 rounded">
+      search for '{{ keywordText }}'
     </h1>
-  </div>
-  <div v-for="movie in movies" class="flex  space-x-2 m-4 ">
-    <RouterLink class="" :to="'/movies/id/' + movie.id">
-      <img class="w-[94px] h-[141px]" loading="lazy" :src="imgBasePath + movie.poster_path" alt="${0}">
-    </RouterLink>
-    <div class="flex flex-col flex-1">
-      <div>
-        <h1 class="block"> {{ movie.title }}</h1>
-        <span>{{ movie.release_date }}</span>
+    <div class="flex flex-col mx-auto space-y-2">
+      <div v-for="movie in movies" class="flex shadow-md p-2 max-w-[1020px] bg-coal-50 sm:p-6 rounded">
+        <RouterLink class="min-w-[130px]" :to="'/movies/id/' + movie.id">
+          <img class="w-[94px] h-[141px]" loading="lazy" :src="imgBasePath + movie.poster_path" alt="${0}">
+          <h1 class="block font-bold max-w-[100px] hover:underline"> {{ movie.title }}</h1>
+          <span class="opacity-70 text-sm">{{ formatDate(movie.release_date) }}</span>
+        </RouterLink>
+        <div class="flex flex-col flex-1">
+          <div>
+          </div>
+          <h1 class="block font-bold max-w-[100px]"> Overview </h1>
+          <p class="text-[0.8rem] sm:text-lg">{{ movie.overview }}</p>
+        </div>
       </div>
-      <p class="text-[0.8rem]">{{ movie.overview }}</p>
     </div>
   </div>
+
 </template>
