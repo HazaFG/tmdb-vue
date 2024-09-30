@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import headers, { formatDate } from '../globals';
+import headers, { formatDate, Season } from '../globals';
 import { useRoute } from 'vue-router';
 const route = useRoute();
 const seriesId: string = route.params.series_id as string
@@ -8,51 +8,6 @@ const imgBasePath: string = "https://image.tmdb.org/t/p/w500";
 const seasonNumber: string = route.params.season_number as string
 let seasonData = ref<Season>();
 getSeasonDetails(seriesId, seasonNumber)
-
-interface GuestStar {
-  adult: boolean
-  character: string
-  credit_id: string
-  gender: number
-  id: number
-  known_for_department: string
-  name: string
-  order: number
-  original_name: string
-  popularity: number
-  profile_path: string
-}
-
-interface Episode {
-  air_date: string
-  crew: Object[]
-  episode_number: number
-  episode_type: string
-  guest_stars: GuestStar[]
-  id: number
-  name: string
-  overview: string
-  production_code: string
-  runtime: number
-  season_number: number
-  show_id: number
-  still_path: string
-  vote_average: number
-  vote_count: number
-}
-
-interface Season {
-  air_date: string
-  episodes: Episode[]
-  id: number
-  name: string
-  overview: string
-  poster_path: string
-  season_number: number
-  vote_average: number
-}
-
-// defineProps<{ msg: string }>()
 
 
 async function getSeasonDetails(seriesId: string, seasonNumber: string) {
@@ -68,13 +23,11 @@ async function getSeasonDetails(seriesId: string, seasonNumber: string) {
 </script>
 <template>
   <div>
-    <img :src="imgBasePath + seasonData?.poster_path">
+    <img class="w-full h-[350px] object-cover" :src="imgBasePath + seasonData?.poster_path">
   </div>
   <div class="py-4 m-4 group select-none space-y-3">
-    <div class="">
-      <span>Episodios {{ seasonData?.episodes.length }}</span>
-    </div>
-    <details class="border-b border-grey-lighter group select-none">
+    <span class="text-2xl font-bold">Episodes {{ seasonData?.episodes.length }}</span>
+    <details class="border-b bg-coal-950 p-4 text-kirby-50 group select-none">
       <summary class="flex items-center font-bold ">Show overview
         <button class="ml-auto">
           <svg class="fill-current opacity-75 w-4 h-4 -mr-1 rotate-90 group-open:-rotate-90"
@@ -113,6 +66,4 @@ async function getSeasonDetails(seriesId: string, seasonNumber: string) {
       </p>
     </div>
   </div>
-
-
 </template>

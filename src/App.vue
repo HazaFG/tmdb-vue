@@ -12,7 +12,7 @@
     <RouterLink class="px-4 py-6" to="/movie/1079091">Detalle Película</RouterLink>
     <RouterLink class="px-4 py-6" to="/person/552252">Detalle persona5</RouterLink>
   </nav>
-  <main class="flex flex-col justify-center">
+  <main class="flex flex-col justify-center bg-kirby-50">
     <router-view></router-view>
   </main>
 </template>

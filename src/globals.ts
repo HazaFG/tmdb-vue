@@ -53,3 +53,85 @@ export function formatDate(date: string): string {
   const d = new Date(date);
   return `${months[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`
 }
+
+
+export interface Movie {
+  type: string,
+  poop: "mine",
+  adult: boolean,
+  backdrop_path: string,
+  genre_ids: number[],
+  id: number,
+  original_language: string,
+  original_title: string,
+  overview: string,
+  popularity: number,
+  poster_path: string,
+  release_date: string,
+  title: string,
+  video: false,
+  vote_average: number,
+  vote_count: number,
+}
+
+export interface TVSeries {
+  type: never,
+  poop: "asdf",
+  adult: boolean,
+  backdrop_path: string,
+  first_air_date: string,
+  genre_ids: number[],
+  id: number,
+  name: string,
+  origin_country: string[],
+  original_language: string,
+  original_name: string,
+  overview: string,
+  popularity: number,
+  poster_path: string,
+  vote_average: number,
+  vote_count: number,
+}
+
+export interface GuestStar {
+  adult: boolean
+  character: string
+  credit_id: string
+  gender: number
+  id: number
+  known_for_department: string
+  name: string
+  order: number
+  original_name: string
+  popularity: number
+  profile_path: string
+}
+
+export interface Episode {
+  air_date: string
+  crew: Object[]
+  episode_number: number
+  episode_type: string
+  guest_stars: GuestStar[]
+  id: number
+  name: string
+  overview: string
+  production_code: string
+  runtime: number
+  season_number: number
+  show_id: number
+  still_path: string
+  vote_average: number
+  vote_count: number
+}
+
+export interface Season {
+  air_date: string
+  episodes: Episode[]
+  id: number
+  name: string
+  overview: string
+  poster_path: string
+  season_number: number
+  vote_average: number
+}

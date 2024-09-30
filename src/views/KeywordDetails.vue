@@ -1,29 +1,19 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import headers, { formatDate } from '../globals';
-import { ref } from 'vue';
+import headers, { formatDate, Movie, TVSeries } from '../globals';
+import { ref, SelectHTMLAttributes } from 'vue';
+import { ChangeEvent } from 'react';
+import MovieLazyOverview from '../components/MovieLazyOverview.vue';
 
-interface Movie {
-  adult: false
-  backdrop_path: string
-  genre_ids: number[]
-  id: number
-  original_language: string
-  original_title: string
-  overview: string
-  popularity: number
-  poster_path: string
-  release_date: string
-  title: string
-  video: false
-  vote_average: number
-  vote_count: number
-}
 
 const route = useRoute();
 const keyword: string = route.params.keyword_id as string
-const imgBasePath: string = "https://image.tmdb.org/t/p/w500";
-let movies = ref<Movie[]>()
+let movies = ref<Movie[]>([])
+let series = ref<TVSeries[]>([])
+//xd
+let isLoading = ref(true);
+const orderByPopularity = ref("");
+const filterByMoviesOrTV = ref("")
 let keywordText = ref("")
 getMoviesByKeyword(keyword);
 getKeywordText(keyword);
@@ -34,9 +24,14 @@ async function getMoviesByKeyword(keyword: string) {
     headers: headers,
     redirect: "follow"
   };
-  const response = await fetch(`https://api.themoviedb.org/3/discover/movie?with_keyword=${keyword}`, requestOptions)
-  const json = await response.json()
+  let response = await fetch(`https://api.themoviedb.org/3/discover/movie?with_keyword=${keyword}`, requestOptions)
+  let json = await response.json()
   movies.value = json.results
+
+  response = await fetch(`https://api.themoviedb.org/3/discover/tv?with_keyword=${keyword}`, requestOptions)
+  json = await response.json()
+  series.value = json.results
+  isLoading.value = false;
 }
 
 async function getKeywordText(keyword: string) {
@@ -49,29 +44,67 @@ async function getKeywordText(keyword: string) {
   const json = await response.json()
   keywordText.value = json.name
 }
+
+function sourceFilter(e: Event) {
+  const select = e.target as HTMLSelectElement
+  filterByMoviesOrTV.value = select.value
+}
+
+function popularityFilter(e: Event) {
+  const select = e.target as HTMLSelectElement
+  orderByPopularity.value = select.value
+  // ooga booga XD
+  switch (orderByPopularity.value) {
+    case "least":
+      movies.value?.sort((movieA, movieB) => movieA.popularity - movieB.popularity)
+
+      series.value?.sort((serieA, serieB) => serieA.popularity - serieB.popularity)
+      break;
+    default:
+      movies.value?.sort((movieA, movieB) => movieB.popularity - movieA.popularity)
+      series.value?.sort((serieA, serieB) => serieB.popularity - serieA.popularity)
+      break;
+  }
+}
+
 </script>
 
 <template>
-
-  <div class="flex flex-col sm:p-4">
-    <h1 class="font-bold text-xl p-4 m-2 bg-coal-100 rounded">
-      search for '{{ keywordText }}'
+  <div class="flex flex-col sm:p-4 text-coffe-950 space-y-2">
+    <h1 class="font-bold text-coal-700 text-xl p-4 my-4 bg-kirby-100 rounded">
+      search for '<span class="text-kirby-800">{{ keywordText }}</span>'
     </h1>
-    <div class="flex flex-col mx-auto space-y-2">
-      <div v-for="movie in movies" class="flex shadow-md p-2 max-w-[1020px] bg-coal-50 sm:p-6 rounded">
-        <RouterLink class="min-w-[130px]" :to="'/movies/id/' + movie.id">
-          <img class="w-[94px] h-[141px]" loading="lazy" :src="imgBasePath + movie.poster_path" alt="${0}">
-          <h1 class="block font-bold max-w-[100px] hover:underline"> {{ movie.title }}</h1>
-          <span class="opacity-70 text-sm">{{ formatDate(movie.release_date) }}</span>
-        </RouterLink>
-        <div class="flex flex-col flex-1">
-          <div>
-          </div>
-          <h1 class="block font-bold max-w-[100px]"> Overview </h1>
-          <p class="text-[0.8rem] sm:text-lg">{{ movie.overview }}</p>
-        </div>
+
+    <div v-if="!isLoading && series?.length == 0 && movies?.length == 0"
+      class="p-4  bg-kirby-900 rounded text-white font-bold text-2xl m-2 mx-auto sm:p-12 max-w-[720px] flex flex-col space-y-2 align-middle items-center">
+      <h1>No hay nada para mostrar:(</h1>
+      <img class="mr-4"
+        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fc.tenor.com%2Fg1SIlwFzDngAAAAj%2Fcrying-hello-kitty-sad-hello-kitty.gif&f=1&nofb=1&ipt=28498cfc28660c99730e1abe5159b2b7ce6a4feb8da7529689dbbbc3fb71f7d5&ipo=images"
+        alt="">
+    </div>
+
+    <div v-else-if="!isLoading" class="flex flex-col align-top mx-auto space-y-2">
+      <span class="text-kirby-950 font-bold">Filter by</span>
+      <div class="flex mr-auto space-x-2">
+        <select v-on:change="sourceFilter" class="bg-kirby-900 text-kirby-50 w-full rounded py-2 px-4 font-bold">
+          <option value="">Movies and TV</option>
+          <option value="movies">Movies</option>
+          <option value="tv">TV Series</option>
+        </select>
+
+        <select v-on:change="popularityFilter" class="bg-kirby-900 text-kirby-50 w-full rounded py-2 px-4 font-bold">
+          <option value="most">Most popular</option>
+          <option value="least">Least popular</option>
+        </select>
       </div>
+      <main class="rounded sm:p-12 h-screen">
+        <div v-if="movies && filterByMoviesOrTV == 'movies' || filterByMoviesOrTV == ''" class="space-y-4 ">
+          <MovieLazyOverview v-for="movie in movies" :media="movie" />
+        </div>
+        <div v-if="series && filterByMoviesOrTV == 'tv' || filterByMoviesOrTV == ''" class="space-y-4">
+          <MovieLazyOverview v-for="serie in series" :media="serie" />
+        </div>
+      </main>
     </div>
   </div>
-
 </template>
