@@ -55,18 +55,18 @@ function popularityFilter(e: Event) {
 
 <template>
   <div class="flex flex-col p-2 sm:p-4 text-coffe-950 space-y-2 ">
-    <div v-if="!isLoading && series?.length == 0 && movies?.length == 0"
-      class="p-4  bg-kirby-900 rounded text-white font-bold text-2xl m-2 mx-auto sm:p-12 max-w-[720px] flex flex-col space-y-2 align-middle items-center">
-      <h1>No hay nada para mostrar:(</h1>
-      <img class="mr-4"
-        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fc.tenor.com%2Fg1SIlwFzDngAAAAj%2Fcrying-hello-kitty-sad-hello-kitty.gif&f=1&nofb=1&ipt=28498cfc28660c99730e1abe5159b2b7ce6a4feb8da7529689dbbbc3fb71f7d5&ipo=images"
-        alt="">
-    </div>
-    <div v-else-if="!isLoading" class="flex flex-col mx-auto space-y-2">
-
+    <div v-if="!isLoading" class="flex flex-col mx-auto space-y-2">
       <SearchHeaders :keyword-text="CATEGORIES[category]" :source-filter="sourceFilter"
         :popularity-filter="popularityFilter" />
-      <div class="rounded sm:p-12 space-y-6">
+      <div
+        v-if="!isLoading && (series?.length == 0 && filterByMoviesOrTV === 'tv') || (movies?.length == 0 && filterByMoviesOrTV === 'movies')"
+        class="p-4  bg-kirby-900 rounded text-white font-bold text-2xl m-2 mx-auto sm:p-12 max-w-[720px] flex flex-col space-y-2 align-middle items-center">
+        <h1>No hay nada para mostrar:(</h1>
+        <img class="mr-4"
+          src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fc.tenor.com%2Fg1SIlwFzDngAAAAj%2Fcrying-hello-kitty-sad-hello-kitty.gif&f=1&nofb=1&ipt=28498cfc28660c99730e1abe5159b2b7ce6a4feb8da7529689dbbbc3fb71f7d5&ipo=images"
+          alt="">
+      </div>
+      <div v-else class="rounded sm:p-12 space-y-6">
         <div v-if="filterByMoviesOrTV == 'movies' || filterByMoviesOrTV == ''" class="space-y-4">
           <MovieLazyOverview v-for="movie in movies" :media="movie" />
         </div>
