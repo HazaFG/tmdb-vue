@@ -3,16 +3,25 @@
 </script>
 
 <template>
-  <nav class="bg-coal-950 text-coal-50 h-fit">
-    <RouterLink class="px-4 py-6" to="/">Home</RouterLink>
-    <RouterLink class="px-4 py-6" to="/season-details/1408/1">season details</RouterLink>
-    <RouterLink class="px-4 py-6" to="/movies/keyword/1701">keyword</RouterLink>
-    <RouterLink class="px-4 py-6" to="/movies/category/28">category</RouterLink>
-    <!-- <RouterLink class="px-4 py-6" to="`/movie/${movie.id}`">Detalle Película</RouterLink> -->
-    <RouterLink class="px-4 py-6" to="/movie/1079091">Detalle Película</RouterLink>
-    <RouterLink class="px-4 py-6" to="/person/552252">Detalle persona5</RouterLink>
+  <!-- Header -->
+  <nav class="bg-black text-white h-fit flex items-center justify-between px-6 py-4">
+    <div class="text-xl font-bold">
+      <RouterLink to="/">Cuevano movies</RouterLink>
+    </div>
+    
+    <!-- Menú de navegación -->
+    <div class="flex space-x-4">
+      <RouterLink class="hover:text-gray-400 transition-colors" to="/">Home</RouterLink>
+      <RouterLink class="hover:text-gray-400 transition-colors" to="/season-details/1408/1">Season Details</RouterLink>
+      <RouterLink class="hover:text-gray-400 transition-colors" to="/movies/keyword/1701">Keyword</RouterLink>
+      <RouterLink class="hover:text-gray-400 transition-colors" to="/movies/category/28">Category</RouterLink>
+      <RouterLink class="hover:text-gray-400 transition-colors" to="/movie/1079091">Movie Details</RouterLink>
+      <RouterLink class="hover:text-gray-400 transition-colors" to="/person/552252">Person Details</RouterLink>
+    </div>
   </nav>
-  <main class="flex flex-col justify-center bg-coffee-50">
+
+  <!-- Main content area -->
+  <main class="flex flex-col justify-center bg-gray-50">
     <router-view></router-view>
   </main>
 </template>
