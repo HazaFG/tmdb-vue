@@ -104,11 +104,20 @@
   </div>
 </div>
 
-      <div class="mt-8 ml-8 mr-8 border">
-  <h2 class="text-2xl ml-4 mt-4 font-semibold">Recomendaciones: </h2>
+<div class="mt-8 ml-8 mr-8 border">
+  <h2 class="text-2xl ml-4 mt-4 font-semibold">Recomendaciones:</h2>
   <div v-if="recommendations && recommendations.results && recommendations.results.length > 0" class="flex overflow-x-auto space-x-4 py-4">
-    <div v-for="recommendation in recommendations.results" :key="recommendation.id" class="ml-4 mr-4 border p-2 rounded-lg text-center flex-shrink-0 w-48">
-      <img :src="imgBasePath + recommendation.poster_path" :alt="recommendation.title" class="w-full h-auto rounded-lg mb-1">
+    <div 
+      v-for="recommendation in recommendations.results" 
+      :key="recommendation.id" 
+      class="ml-4 mr-4 border p-2 rounded-lg text-center flex-shrink-0 w-48 cursor-pointer" 
+      @click="redirectToMovie(recommendation.id)"
+    >
+      <img 
+        :src="imgBasePath + recommendation.poster_path" 
+        :alt="recommendation.title" 
+        class="w-full h-auto rounded-lg mb-1"
+      >
       <p class="font-bold">{{ recommendation.title }}</p>
       <p class="text-sm">{{ (recommendation.vote_average * 10).toFixed(0) }}% recomendado</p>
     </div>
@@ -118,6 +127,7 @@
   </div>
 </div>
 
+
     </div>
 </template>
 
@@ -125,7 +135,7 @@
 import { useRoute } from 'vue-router';
 import { useRouter } from 'vue-router'; 
 import headers from '../globals';  
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 interface Movie {
   adult: boolean;
@@ -180,6 +190,10 @@ function redirectToGenre(genreId: number) {
   router.push(`/movies/category/${genreId}`);
 }
 
+function redirectToMovie(movieId: number) {
+  router.push(`/movie/${movieId}`);
+}
+
 const route = useRoute();
 const movieId: string = route.params.id as string;
 const imgBasePath: string = "https://image.tmdb.org/t/p/w500";
@@ -190,7 +204,13 @@ const keywords = ref<Keywords | null>(null);
 const recommendations = ref<Recommendations | null>(null);
 const trailer = ref<any | null>(null);
 
-getMovieDetails(movieId);
+
+watch(() => route.params.id, (newId) => {
+  if (typeof newId === 'string') {
+    getMovieDetails(newId);
+    window.scrollTo(0, 0);
+  }
+});
 
 async function getMovieDetails(movieId: string) {
   const requestOptions: RequestInit = {
@@ -251,4 +271,7 @@ function getActors() {
 function getReleaseYear(releaseDate: string) {
   return releaseDate.substring(0, 4); 
 }
+
+getMovieDetails(movieId);
+
 </script>
