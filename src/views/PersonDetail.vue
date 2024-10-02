@@ -1,11 +1,11 @@
 <template>
   <div v-if="person" class="max-w-7xl mx-auto p-6">
+    
     <div class="flex space-x-6 mb-8 border rounded-lg p-4">
       <img
         :src="imgBasePath + person.profile_path"
         :alt="person.name"
-        class="w-48 h-64 object-cover shadow-lg rounded-lg"
-      />
+        class="w-48 h-64 object-cover shadow-lg rounded-lg"/>
       <div>
         <h1 class="text-5xl font-bold">{{ person.name }}</h1>
         <p class="mt-2">{{ person.biography }}</p>
@@ -117,7 +117,7 @@ async function getPersonDetails(personId: string) {
 const knownForLimited = computed(() => {
   const movies = person.value?.movie_credits.cast.slice(0, 4) || [];
   const tvShows = person.value?.tv_credits.cast.slice(0, 4) || [];
-  return [...movies, ...tvShows].slice(0, 8);  // Combina y limita a 8
+  return [...movies, ...tvShows].slice(0, 8);//combina y limita a 8
 });
 
 function getReleaseYear(releaseDate: string | undefined): string {
