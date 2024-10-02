@@ -58,6 +58,25 @@
         </div>
       </div>
   
+    <div class="mt-8 ml-8 mr-8 border">
+    <h2 class="text-2xl ml-4 mt-4 font-semibold">Temporadas:</h2>
+    <div v-if="serie.seasons && serie.seasons.length > 0" class="flex overflow-x-auto space-x-4 py-4">
+        <div v-for="season in serie.seasons" :key="season.id" class="ml-4 mr-4 border p-2 rounded-lg text-center flex-shrink-0 w-48">
+        <img v-if="season.poster_path" :src="imgBasePath + season.poster_path" :alt="season.name" class="w-full h-auto rounded-lg mb-1">
+        <p class="font-bold">{{ season.name }}</p>
+        <p class="text-sm">Temporada {{ season.season_number }}</p>
+        <p class="text-sm">Fecha de estreno: {{ season.air_date }}</p>
+        <!-- Botón para redirigir a la temporada específica -->
+        <button @click="redirectToSeason(serie.id, season.season_number)" class="mt-2 bg-blue-500 text-white px-4 py-1 rounded-lg">
+            Ver Temporada
+        </button>
+        </div>
+    </div>
+    <div v-else>
+        <p class="ml-4 mt-4">No hay temporadas disponibles.</p>
+    </div>
+    </div>
+
       <div class="mt-8 ml-8 mr-8 border">
         <h2 class="text-2xl ml-4 mt-4 font-semibold">Información adicional:</h2>
         <p class="ml-4 mt-4">Título Original: {{ serie.original_name }}</p>
@@ -118,6 +137,7 @@ interface Serie {
     number_of_seasons: number;
     status: string;
     created_by: { id: number; name: string }[];
+    seasons: { id: number; name: string; season_number: number; air_date: string; poster_path: string }[]; // Nueva propiedad para las temporadas
 }
   
 interface Credits {
@@ -128,7 +148,7 @@ interface Credits {
 interface Recommendations {
     results: { id: number; name: string; poster_path: string; vote_average: number }[];
 }
-  
+
 interface Video {
     id: string;
     key: string;
@@ -138,87 +158,100 @@ interface Video {
 }
   
 interface Keyword {
-    id: number;
-    name: string;
+      id: number;
+      name: string;
 }
   
 const router = useRouter();
   
 function redirectToGenre(genreId: number) {
-    router.push(`/series/category/${genreId}`);
+      router.push(`/series/category/${genreId}`);
 }
-
+  
 function redirectToSerie(movieId: number) {
-  router.push(`/serie/${movieId}`);
+      router.push(`/serie/${movieId}`);
+}
+
+function redirectToSeason(seriesId: number, seasonNumber: number) {
+  router.push(`/season-details/${seriesId}/${seasonNumber}`);
+}
+
+
+  
+  const route = useRoute();
+  const serieId: string = route.params.id as string;
+  const imgBasePath: string = "https://image.tmdb.org/t/p/w500";
+  
+  let serie = ref<Serie | null>(null);
+  const credits = ref<Credits | null>(null);
+  const recommendations = ref<Recommendations | null>(null);
+  const trailer = ref<any | null>(null);
+  const keywords = ref<Keyword[]>([]);
+  let seasons = ref<any[]>([]); // Nueva referencia para almacenar temporadas
+  
+  watch(() => route.params.id, (newId) => {
+      if (typeof newId === 'string') {
+          getSerieDetails(newId);
+          window.scrollTo(0, 0);
+      }
+  });
+  
+  getSerieDetails(serieId);
+  
+  async function getSerieDetails(serieId: string) {
+      const requestOptions: RequestInit = {
+          method: "GET",
+          headers: headers,
+          redirect: "follow"
+      };
+  
+      // Obtener el tráiler
+      const videosResponse = await fetch(`https://api.themoviedb.org/3/tv/${serieId}/videos`, requestOptions);
+      const videosJson = await videosResponse.json();
+      trailer.value = videosJson.results.find((video: Video) => video.type === 'Trailer' && video.site === 'YouTube');
+  
+      // Obtener los detalles de la serie
+      const response = await fetch(`https://api.themoviedb.org/3/tv/${serieId}`, requestOptions);
+      const json = await response.json();
+      serie.value = json;
+  
+      // Obtener el elenco
+      const creditsResponse = await fetch(`https://api.themoviedb.org/3/tv/${serieId}/credits`, requestOptions);
+      const creditsJson = await creditsResponse.json();
+      credits.value = creditsJson;
+  
+      // Obtener recomendaciones
+      const recommendationsResponse = await fetch(`https://api.themoviedb.org/3/tv/${serieId}/recommendations`, requestOptions);
+      const recommendationsJson = await recommendationsResponse.json();
+      recommendations.value = recommendationsJson;
+  
+      // Obtener palabras clave
+      const keywordsResponse = await fetch(`https://api.themoviedb.org/3/tv/${serieId}/keywords`, requestOptions);
+      const keywordsJson = await keywordsResponse.json();
+      keywords.value = keywordsJson.keywords;
+  
+    // Obtener temporadas
+    const seasonsResponse = await fetch(`https://api.themoviedb.org/3/tv/${serieId}/seasons`, requestOptions);
+    const seasonsJson = await seasonsResponse.json();
+    seasons.value = seasonsJson.seasons; // Asignar las temporadas a la referencia
 }
   
-const route = useRoute();
-const serieId: string = route.params.id as string;
-const imgBasePath: string = "https://image.tmdb.org/t/p/w500";
-  
-let serie = ref<Serie | null>(null);
-const credits = ref<Credits | null>(null);
-const recommendations = ref<Recommendations | null>(null);
-const trailer = ref<any | null>(null);
-const keywords = ref<Keyword[]>([]); // Nueva referencia para palabras clave
-
-watch(() => route.params.id, (newId) => {
-  if (typeof newId === 'string') {
-    getSerieDetails(newId);
-    window.scrollTo(0, 0);
+  function getCreators() {
+      if (!serie.value) return 'Desconocido';
+      return serie.value.created_by ? serie.value.created_by.map((creator: any) => creator.name).join(', ') : 'Desconocido';
   }
-});
-
   
-getSerieDetails(serieId);
+  function getActors() {
+      if (!credits.value) return [];
+      return credits.value.cast.slice(0, 5); // Retornar los primeros 5 actores
+  }
   
-async function getSerieDetails(serieId: string) {
-    const requestOptions: RequestInit = {
-      method: "GET",
-      headers: headers,
-      redirect: "follow"
-};
+  function getReleaseYear(date: string) {
+      return new Date(date).getFullYear();
+  }
+  </script>
   
-// Obtener el tráiler
-const videosResponse = await fetch(`https://api.themoviedb.org/3/tv/${serieId}/videos`, requestOptions);
-const videosJson = await videosResponse.json();
-trailer.value = videosJson.results.find((video: Video) => video.type === 'Trailer' && video.site === 'YouTube');
-  
-// Obtener los detalles de la serie
-const response = await fetch(`https://api.themoviedb.org/3/tv/${serieId}`, requestOptions);
-const json = await response.json();
-serie.value = json;
-  
-// Obtener el elenco
-const creditsResponse = await fetch(`https://api.themoviedb.org/3/tv/${serieId}/credits`, requestOptions);
-const creditsJson = await creditsResponse.json();
-credits.value = creditsJson;
-  
-// Obtener recomendaciones
-const recommendationsResponse = await fetch(`https://api.themoviedb.org/3/tv/${serieId}/recommendations`, requestOptions);
-const recommendationsJson = await recommendationsResponse.json();
-recommendations.value = recommendationsJson;
-  
-// Obtener palabras clave
-const keywordsResponse = await fetch(`https://api.themoviedb.org/3/tv/${serieId}/keywords`, requestOptions);
-const keywordsJson = await keywordsResponse.json();
-keywords.value = keywordsJson.keywords; // Asignar palabras clave a la referencia
-
-}
-  
-function getCreators() {
-    if (!serie.value) return 'Desconocido';
-    return serie.value.created_by ? serie.value.created_by.map((creator: any) => creator.name).join(', ') : 'Desconocido';
-}
-  
-function getActors() {
-    if (!credits.value) return [];
-    return credits.value.cast.slice(0, 5); // Retornar los primeros 5 actores
-}
-  
-function getReleaseYear(date: string) {
-    return new Date(date).getFullYear();
-}
-</script>
-
+  <style scoped>
+  /* Agrega tus estilos aquí si es necesario */
+  </style>
   
