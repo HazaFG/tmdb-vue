@@ -4,6 +4,7 @@ import KeywordDetails from "./views/KeywordDetails.vue";
 import MoviesFiltered from "./views/MoviesFiltered.vue";
 import SeasonDetails from "./views/SeasonDetails.vue";
 import MovieDetail from "./views/MovieDetail.vue";
+import SerieDetail from "./views/SerieDetail.vue"; 
 import PersonDetail from "./views/PersonDetail.vue";
 import Login from "./views/Login.vue";
 
@@ -16,6 +17,7 @@ export const ROUTES = [
   { path: '/movies/keyword/:keyword_id', component: KeywordDetails },
   { path: '/movies/category/:category_id', component: CategoriesDetails },
   { path: '/movie/:id', component: MovieDetail },
+  { path: '/serie/:id', component: SerieDetail }, // Añade la ruta para SerieDetail
   { path: '/person/:id', component: PersonDetail },
   { path: '/login', component: Login },
 ]
@@ -28,6 +30,7 @@ export default headers;
 export interface Category {
   [id: string]: string;
 }
+
 export const imgBasePath: string = "https://image.tmdb.org/t/p/w500";
 
 export const CATEGORIES: Category = {
@@ -50,15 +53,15 @@ export const CATEGORIES: Category = {
   "53": "Thriller",
   "37": "Western",
 }
-const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
+const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November"];
 
 export function formatDate(date: string | undefined): string {
   if (date == undefined)
     return "Loading";
   const d = new Date(date);
-  return `${months[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`
+  return `${months[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
 }
-
 
 export interface Movie {
   type: string,
@@ -140,4 +143,3 @@ export interface Season {
   season_number: number
   vote_average: number
 }
-

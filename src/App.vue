@@ -16,6 +16,7 @@
       <RouterLink class="hover:text-gray-400 transition-colors" to="/movies/keyword/1701">Keyword</RouterLink>
       <RouterLink class="hover:text-gray-400 transition-colors" to="/movies/category/28">Category</RouterLink>
       <RouterLink class="hover:text-gray-400 transition-colors" to="/movie/1079091">Movie Details</RouterLink>
+      <RouterLink class="hover:text-gray-400 transition-colors" to="/serie/136166">Serie Details</RouterLink>
       <RouterLink class="hover:text-gray-400 transition-colors" to="/person/552252">Person Details</RouterLink>
       <RouterLink class="hover:text-gray-400 transition-colors" to="/login">loginn</RouterLink>
     </div>
