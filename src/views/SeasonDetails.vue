@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import headers, { formatDate, imgBasePath, Season } from '../globals';
+import headers, { API_KEY, formatDate, imgBasePath, Season } from '../globals';
 import { useRoute } from 'vue-router';
 import Episode from '../components/Episode.vue';
 const route = useRoute();
@@ -10,10 +10,14 @@ let seasonData = ref<Season>();
 getSeasonDetails(seriesId, seasonNumber)
 
 
+
 async function getSeasonDetails(seriesId: string, seasonNumber: string) {
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${API_KEY}`);
+
   const requestOptions: RequestInit = {
     method: "GET",
-    headers: headers,
+    headers: myHeaders,
     redirect: "follow"
   };
   const response = await fetch(`https://api.themoviedb.org/3/tv/${seriesId}/season/${seasonNumber}`, requestOptions)

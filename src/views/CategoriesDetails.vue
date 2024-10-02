@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import headers, { CATEGORIES, Movie, TVSeries } from '../globals';
+import headers, { API_KEY, CATEGORIES, Movie, TVSeries } from '../globals';
 import { ref } from 'vue';
 import MovieLazyOverview from '../components/MovieLazyOverview.vue';
 import SearchHeaders from '../components/SearchHeaders.vue';
@@ -15,11 +15,16 @@ const filterByMoviesOrTV = ref("")
 getMoviesByCategory(category)
 
 async function getMoviesByCategory(category: string) {
+
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${API_KEY}`);
+
   const requestOptions: RequestInit = {
     method: "GET",
-    headers: headers,
+    headers: myHeaders,
     redirect: "follow"
   };
+
   let response = await fetch(`https://api.themoviedb.org/3/discover/movie?with_genres=${category}`, requestOptions)
   let json = await response.json()
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import headers, { Movie, TVSeries } from '../globals';
-import { ref} from 'vue';
+import { API_KEY, Movie, TVSeries } from '../globals';
+import { ref } from 'vue';
 import MovieLazyOverview from '../components/MovieLazyOverview.vue';
 import SearchHeaders from '../components/SearchHeaders.vue';
 
@@ -19,13 +19,18 @@ getMoviesByKeyword(keyword);
 getKeywordText(keyword);
 
 async function getMoviesByKeyword(keyword: string) {
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${API_KEY}`);
+
   const requestOptions: RequestInit = {
     method: "GET",
-    headers: headers,
+    headers: myHeaders,
     redirect: "follow"
   };
-  let response = await fetch(`https://api.themoviedb.org/3/discover/movie?with_keyword=${keyword}`, requestOptions)
+
+  let response = await fetch(`https://api.themoviedb.org/3/discover/movie?with_keywords=${keyword}`, requestOptions)
   let json = await response.json()
+  console.log(json)
   movies.value = json.results
 
   response = await fetch(`https://api.themoviedb.org/3/discover/tv?with_keyword=${keyword}`, requestOptions)
@@ -35,11 +40,16 @@ async function getMoviesByKeyword(keyword: string) {
 }
 
 async function getKeywordText(keyword: string) {
+
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${API_KEY}`);
+
   const requestOptions: RequestInit = {
     method: "GET",
-    headers: headers,
+    headers: myHeaders,
     redirect: "follow"
   };
+
   const response = await fetch(`https://api.themoviedb.org/3/keyword/${keyword}`, requestOptions)
   const json = await response.json()
   keywordText.value = json.name

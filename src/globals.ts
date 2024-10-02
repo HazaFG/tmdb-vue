@@ -4,7 +4,7 @@ import KeywordDetails from "./views/KeywordDetails.vue";
 import MoviesFiltered from "./views/MoviesFiltered.vue";
 import SeasonDetails from "./views/SeasonDetails.vue";
 import MovieDetail from "./views/MovieDetail.vue";
-import SerieDetail from "./views/SerieDetail.vue"; 
+import SerieDetail from "./views/SerieDetail.vue";
 import PersonDetail from "./views/PersonDetail.vue";
 import Login from "./views/Login.vue";
 import Favorite from "./views/Favorite.vue";
@@ -18,6 +18,7 @@ export const ROUTES = [
   { path: '/movies', component: MoviesFiltered },
   { path: '/movies/keyword/:keyword_id', component: KeywordDetails },
   { path: '/movies/category/:category_id', component: CategoriesDetails },
+  { path: '/series/category/:category_id', component: CategoriesDetails },
   { path: '/movie/:id', component: MovieDetail },
   { path: '/serie/:id', component: SerieDetail }, // Añade la ruta para SerieDetail
   { path: '/person/:id', component: PersonDetail },
