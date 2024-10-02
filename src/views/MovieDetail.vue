@@ -26,7 +26,14 @@
             <div class="mt-8">
               <h2 class="text-2xl font-semibold">Géneros:</h2>
               <ul>
-                <li v-for="genre in movie.genres" :key="genre.id">{{ genre.name }}</li>
+                <li v-for="genre in movie.genres" :key="genre.id">
+                  <span
+                    @click="redirectToGenre(genre.id)"
+                    class="cursor-pointer hover:underline"
+                  >
+                    {{ genre.name }}
+                  </span>
+                </li>
               </ul>
             </div>
 
@@ -139,8 +146,13 @@ interface Keywords {
 
 //redireccionar
 const router = useRouter()
+
 function redirectToKeyword(keywordId: number) {
   router.push(`/movies/keyword/${keywordId}`);
+}
+
+function redirectToGenre(genreId: number) {
+  router.push(`/movies/category/${genreId}`);
 }
 
 const route = useRoute();
