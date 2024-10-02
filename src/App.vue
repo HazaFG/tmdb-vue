@@ -18,7 +18,7 @@
       <!-- <RouterLink class="hover:text-gray-400 transition-colors" to="/movie/1079091">Movie Details</RouterLink> -->
       <!-- <RouterLink class="hover:text-gray-400 transition-colors" to="/serie/136166">Serie Details</RouterLink> -->
       <!-- <RouterLink class="hover:text-gray-400 transition-colors" to="/person/552252">Person Details</RouterLink> -->
-      <RouterLink class="hover:text-gray-400 transition-colors" to="/login">Login/Logout</RouterLink>
+      <!-- <RouterLink class="hover:text-gray-400 transition-colors" to="/login">Login/Logout</RouterLink> -->
       <RouterLink class="hover:text-gray-400 transition-colors" to="/favorite">Favoritos</RouterLink>
     </div>
   </nav>
