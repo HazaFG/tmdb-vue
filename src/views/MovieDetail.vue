@@ -66,36 +66,40 @@
         <p class="ml-4">Ingresos: ${{ movie.revenue.toLocaleString() }}</p>
 
         <div class="mt-4 ml-4">
-          <h2 class="text-lg font-semibold">Palabras clave:</h2>
-          <ul class="flex flex-wrap space-x-2 mt-2">
-            <li v-for="keyword in keywords?.keywords" :key="keyword.id">
-              <span class="bg-blue-500 text-white rounded-full px-3 py-1 text-sm">
-                {{ keyword.name }}
-              </span>
-            </li>
-          </ul>
-        </div>
+        <h2 class="text-lg font-semibold">Palabras clave:</h2>
+        <ul class="flex flex-wrap space-x-2 mt-2">
+          <li v-for="keyword in keywords?.keywords" :key="keyword.id" class="mb-2">
+            <span
+          @click="redirectToKeyword(keyword.id)"
+          class="bg-blue-500 text-white rounded-full px-3 py-1 text-sm cursor-pointer hover:bg-blue-700 transition">
+              {{ keyword.name }}
+            </span>
+          </li>
+        </ul>
+      </div>
 
       </div>
 
-      <div class="flex space-x-2">
-        <div class="mt-4">
-            <h2>Recomendaciones: </h2>
-            <div v-if="recommendations?.results">
-              <ul>
-                <li v-for="recommendation in recommendations.results" :key="recommendation.id">
-                  {{ recommendation.title }}
-                </li>
-              </ul>
-            </div>
-          </div>
-      </div>
+      <div class="mt-8 ml-8 mr-8 border">
+  <h2 class="text-2xl ml-4 mt-4 font-semibold">Recomendaciones: </h2>
+  <div v-if="recommendations && recommendations.results && recommendations.results.length > 0" class="flex overflow-x-auto space-x-4 py-4">
+    <div v-for="recommendation in recommendations.results" :key="recommendation.id" class="ml-4 mr-4 border p-2 rounded-lg text-center flex-shrink-0 w-48">
+      <img :src="imgBasePath + recommendation.poster_path" :alt="recommendation.title" class="w-full h-auto rounded-lg mb-1">
+      <p class="font-bold">{{ recommendation.title }}</p>
+      <p class="text-sm">{{ (recommendation.vote_average * 10).toFixed(0) }}% recomendado</p>
+    </div>
+  </div>
+  <div v-else>
+    <p class="ml-4 mt-4">No hay recomendaciones disponibles.</p>
+  </div>
+</div>
 
     </div>
 </template>
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router'; 
 import headers from '../globals';  
 import { ref } from 'vue';
 
@@ -126,11 +130,17 @@ interface Credits {
 }
 
 interface Recommendations {
-  results: { id: number; title: string; poster_path: string }[];
+  results: { id: number; title: string; poster_path: string; vote_average: number }[];
 }
 
 interface Keywords {
   keywords: { id: number; name: string }[];
+}
+
+//redireccionar
+const router = useRouter()
+function redirectToKeyword(keywordId: number) {
+  router.push(`/movies/keyword/${keywordId}`);
 }
 
 const route = useRoute();

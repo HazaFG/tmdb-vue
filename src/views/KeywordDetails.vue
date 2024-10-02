@@ -77,7 +77,7 @@ function popularityFilter(e: Event) {
       <div
         v-if="!isLoading && (series?.length == 0 && filterByMoviesOrTV === 'tv') || (movies?.length == 0 && filterByMoviesOrTV === 'movies') || (!movies.length && !series.length)"
         class="p-4  bg-kirby-900 rounded text-white font-bold text-2xl m-2 mx-auto sm:p-12 max-w-[720px] flex flex-col space-y-2 align-middle items-center">
-        <h1>No hay nada para mostrar:(</h1>
+        <h1>No hay nada para mostrar: </h1>
         <img class="mr-4"
           src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fc.tenor.com%2Fg1SIlwFzDngAAAAj%2Fcrying-hello-kitty-sad-hello-kitty.gif&f=1&nofb=1&ipt=28498cfc28660c99730e1abe5159b2b7ce6a4feb8da7529689dbbbc3fb71f7d5&ipo=images"
           alt="">
