@@ -88,6 +88,23 @@
       </div>
 
       <div class="mt-8 ml-8 mr-8 border">
+  <h2 class="text-2xl ml-4 mt-4 font-semibold">Trailer:</h2>
+  <div v-if="trailer" class="mt-4 mb-4 ml-4">
+    <iframe
+      :src="`https://www.youtube.com/embed/${trailer.key}`"
+      width="560"
+      height="315"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+  </div>
+  <div v-else>
+    <p class="ml-4 mt-4">No hay tráiler disponible.</p>
+  </div>
+</div>
+
+      <div class="mt-8 ml-8 mr-8 border">
   <h2 class="text-2xl ml-4 mt-4 font-semibold">Recomendaciones: </h2>
   <div v-if="recommendations && recommendations.results && recommendations.results.length > 0" class="flex overflow-x-auto space-x-4 py-4">
     <div v-for="recommendation in recommendations.results" :key="recommendation.id" class="ml-4 mr-4 border p-2 rounded-lg text-center flex-shrink-0 w-48">
@@ -144,6 +161,14 @@ interface Keywords {
   keywords: { id: number; name: string }[];
 }
 
+interface Video {
+  id: string;
+  key: string;
+  name: string;
+  site: string;
+  type: string;
+}
+
 //redireccionar
 const router = useRouter()
 
@@ -163,6 +188,7 @@ let movie = ref<Movie | null>(null);
 const credits = ref<Credits | null>(null);
 const keywords = ref<Keywords | null>(null);
 const recommendations = ref<Recommendations | null>(null);
+const trailer = ref<any | null>(null);
 
 getMovieDetails(movieId);
 
@@ -172,6 +198,10 @@ async function getMovieDetails(movieId: string) {
     headers: headers,
     redirect: "follow"
   };
+  //trailer
+  const videosResponse = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos`, requestOptions);
+  const videosJson = await videosResponse.json();
+  trailer.value = videosJson.results.find((video: Video) => video.type === 'Trailer' && video.site === 'YouTube');
 
   //las cosas de la pelicula
   const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}`, requestOptions);
