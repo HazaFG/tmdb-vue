@@ -150,7 +150,7 @@ interface Serie {
   
 interface Credits {
     crew: { job: string; name: string }[];
-    cast: { name: string; character: string; profile_path: string }[];
+    cast: { id:number; name: string; character: string; profile_path: string }[];
 }
   
 interface Recommendations {
@@ -217,7 +217,7 @@ function redirectToPerson(personId: number) {
 if (!serie.value) return;
 
 const favoritos = JSON.parse(localStorage.getItem('favoritos') || '[]');
-const movieIndex = favoritos.findIndex((fav: Serie) => fav.id === serie.value.id);
+const movieIndex = favoritos.findIndex((fav: Serie) => fav.id === serie.value!.id);
 
 if (movieIndex === -1) {
   favoritos.push(serie.value);

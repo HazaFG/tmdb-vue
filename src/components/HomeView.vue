@@ -138,7 +138,7 @@ const handleSearch = () => {
       class="absolute inset-0 flex transition-transform duration-500 ease-in-out"
       :style="{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }"
     >
-      <div v-for="(movie, index) in movies" :key="movie.id" class="w-1/3 h-full flex-shrink-0">
+      <div v-for="(movie) in movies" :key="movie.id" class="w-1/3 h-full flex-shrink-0">
         <img
           v-if="movie.backdrop_path"
           :src="`https://image.tmdb.org/t/p/original${movie.backdrop_path}`"
@@ -171,7 +171,7 @@ const handleSearch = () => {
   <h2 class="text-2xl font-bold mb-4">Tendencia</h2>
   <div class="flex overflow-x-auto space-x-4">
     <div
-      v-for="(movie, index) in trendingMovies"
+      v-for="(movie) in trendingMovies"
       :key="movie.id"
       class="flex-none w-48 bg-white rounded-lg shadow-lg p-2 cursor-pointer"
       @click="redirectToMovie(movie.id)"
@@ -199,7 +199,7 @@ const handleSearch = () => {
 
     <div class="flex overflow-x-auto space-x-4">
       <div
-        v-for="(movie, index) in movies"
+        v-for="(movie) in movies"
         :key="movie.id"
         class="flex-none w-48 bg-white rounded-lg shadow-lg p-2 cursor-pointer"
         @click="redirectToMovie(movie.id)"
@@ -226,7 +226,7 @@ const handleSearch = () => {
     <h2 class="text-2xl font-bold mb-4">Ver Series</h2>
     <div class="flex overflow-x-auto space-x-4">
       <div
-        v-for="(serie, index) in allSeries"
+        v-for="(serie) in allSeries"
         :key="serie.id"
         class="flex-none w-48 bg-white rounded-lg shadow-lg p-2 cursor-pointer"
         @click="redirectToSerie(serie.id)"
@@ -254,7 +254,7 @@ const handleSearch = () => {
 
     <div class="flex overflow-x-auto space-x-4">
       <div
-        v-for="(movie, index) in freeMovies"
+        v-for="(movie) in freeMovies"
         :key="movie.id"
         class="flex-none w-48 bg-white rounded-lg shadow-lg p-2 cursor-pointer"
         @click="redirectToMovie(movie.id)"

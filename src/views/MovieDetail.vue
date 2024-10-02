@@ -227,9 +227,9 @@ const isFavorite = ref(false);
 function toggleFavorite() {
 
   if (!movie.value) return;
-  
+
   const favoritos = JSON.parse(localStorage.getItem('favoritos') || '[]');
-  const movieIndex = favoritos.findIndex((fav: Movie) => fav.id === movie.value.id);
+  const movieIndex = favoritos.findIndex((fav: Movie) => fav.id === movie.value!.id);
 
   if (movieIndex === -1) {
     favoritos.push(movie.value);
