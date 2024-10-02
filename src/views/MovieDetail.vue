@@ -19,7 +19,10 @@
             <p>Duración: {{ movie.runtime }} minutos</p>
             <p>Rating: {{ movie.vote_average }}</p>
             
-            <button class="bg-red-500 text-white px-4 py-2 mt-4 rounded-lg">Favorito</button>
+            <button :class="isFavorite ? 'bg-red-500' : 'bg-blue-500'" class="text-white px-4 py-2 mt-4 rounded-lg" 
+              @click="toggleFavorite">
+              {{ isFavorite ? 'Eliminar de favoritos' : 'Agregar a favoritos' }}
+            </button>
 
             <p class="mt-8">{{ movie.overview }}</p>
 
@@ -216,6 +219,29 @@ watch(() => route.params.id, (newId) => {
     window.scrollTo(0, 0);
   }
 });
+
+
+
+const isFavorite = ref(false);
+
+function toggleFavorite() {
+
+  if (!movie.value) return;
+  
+  const favoritos = JSON.parse(localStorage.getItem('favoritos') || '[]');
+  const movieIndex = favoritos.findIndex((fav: Movie) => fav.id === movie.value.id);
+
+  if (movieIndex === -1) {
+    favoritos.push(movie.value);
+    isFavorite.value = true;
+  } else {
+    favoritos.splice(movieIndex, 1);
+    isFavorite.value = false;
+  }
+  localStorage.setItem('favoritos', JSON.stringify(favoritos));
+}
+
+
 
 async function getMovieDetails(movieId: string) {
   const requestOptions: RequestInit = {

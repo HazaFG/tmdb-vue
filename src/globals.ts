@@ -7,6 +7,7 @@ import MovieDetail from "./views/MovieDetail.vue";
 import SerieDetail from "./views/SerieDetail.vue"; 
 import PersonDetail from "./views/PersonDetail.vue";
 import Login from "./views/Login.vue";
+import Favorite from "./views/Favorite.vue";
 
 export const API_KEY = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0ZTcyMDUxZTNiYzJjNjE1ZWQyMWQ3NGU5YTU1YWM1MCIsIm5iZiI6MTcyNzg2MzgzNC40Mjc0MTMsInN1YiI6IjY2ZjJmNjM3NzMwMGE1YmEyMTNjMGEwYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.6dR_FDwJCugqXDkN91dLQQ0aAlTOnYkAz7B1m15j2fA"
 
@@ -20,6 +21,7 @@ export const ROUTES = [
   { path: '/serie/:id', component: SerieDetail }, // Añade la ruta para SerieDetail
   { path: '/person/:id', component: PersonDetail },
   { path: '/login', component: Login },
+  { path: '/favorite', component: Favorite },
 ]
 
 const headers = new Headers();

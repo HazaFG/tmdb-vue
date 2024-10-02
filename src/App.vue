@@ -19,6 +19,7 @@
       <!-- <RouterLink class="hover:text-gray-400 transition-colors" to="/serie/136166">Serie Details</RouterLink> -->
       <!-- <RouterLink class="hover:text-gray-400 transition-colors" to="/person/552252">Person Details</RouterLink> -->
       <RouterLink class="hover:text-gray-400 transition-colors" to="/login">loginn</RouterLink>
+      <RouterLink class="hover:text-gray-400 transition-colors" to="/favorite">Favoritos</RouterLink>
     </div>
   </nav>
 

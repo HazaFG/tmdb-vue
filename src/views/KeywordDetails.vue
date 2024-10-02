@@ -2,7 +2,6 @@
 import { useRoute } from 'vue-router';
 import headers, { formatDate, Movie, TVSeries } from '../globals';
 import { ref, SelectHTMLAttributes } from 'vue';
-import { ChangeEvent } from 'react';
 import MovieLazyOverview from '../components/MovieLazyOverview.vue';
 import SearchHeaders from '../components/SearchHeaders.vue';
 
