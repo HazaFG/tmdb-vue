@@ -2,8 +2,10 @@
 import { ref, onMounted } from 'vue';
 
 const movies = ref([]);
+const trendingMovies = ref([]);
 const currentIndex = ref(0);
 const searchQuery = ref('');
+const allSeries = ref([]);  // Declarar allSeries como ref
 
 const fetchPopularMovies = async () => {
   try {
@@ -11,12 +13,37 @@ const fetchPopularMovies = async () => {
     const data = await response.json();
     movies.value = data.results;
   } catch (error) {
-    console.error('Error fetching movies:', error);
+    console.error('Error fetching popular movies:', error);
+  }
+};
+
+const fetchTrendingMovies = async () => {
+  try {
+    const response = await fetch('https://api.themoviedb.org/3/trending/movie/day?api_key=4e72051e3bc2c615ed21d74e9a55ac50');
+    const data = await response.json();
+    trendingMovies.value = data.results;
+  } catch (error) {
+    console.error('Error fetching trending movies:', error);
+  }
+};
+
+const fetchAllSeries = async () => {
+  try {
+    const response = await fetch('https://api.themoviedb.org/3/tv/popular?api_key=4e72051e3bc2c615ed21d74e9a55ac50&language=en-US&page=1');
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    allSeries.value = data.results;  // Almacena los resultados en allSeries
+  } catch (error) {
+    console.error('Error fetching series:', error);
   }
 };
 
 onMounted(() => {
   fetchPopularMovies();
+  fetchTrendingMovies();
+  fetchAllSeries();
 });
 
 const nextImage = () => {
@@ -28,7 +55,6 @@ const prevImage = () => {
 };
 
 const handleSearch = () => {
-  // Aquí puedes manejar la búsqueda con `searchQuery`
   console.log('Search:', searchQuery.value);
 };
 </script>
@@ -47,7 +73,6 @@ const handleSearch = () => {
       </div>
     </div>
 
-    <!-- Fondo negro semitransparente para el texto y la barra de búsqueda -->
     <div class="absolute inset-0 bg-black bg-opacity-70 flex flex-col justify-center items-center text-white px-4">
       <h1 class="text-4xl font-bold mb-4">Bienvenido a Cuevano Movies</h1>
       <p class="mb-6">Encuentra tus películas favoritas con facilidad</p>
@@ -65,4 +90,106 @@ const handleSearch = () => {
     <button @click="prevImage" class="absolute left-0 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 p-2">⟨</button>
     <button @click="nextImage" class="absolute right-0 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 p-2">⟩</button>
   </div>
+
+  <!-- Sección de Tendencias -->
+  <section class="my-8">
+    <h2 class="text-2xl font-bold mb-4">Tendencia</h2>
+    <div class="flex items-center mb-4">
+      <button class="py-2 px-4 bg-blue-500 text-white rounded-l">Hoy</button>
+      <button class="py-2 px-4 bg-gray-200 text-black rounded-r">Esta semana</button>
+    </div>
+
+    <div class="flex overflow-x-auto space-x-4">
+      <div
+        v-for="(movie, index) in trendingMovies"
+        :key="movie.id"
+        class="flex-none w-48 bg-white rounded-lg shadow-lg p-2">
+        <img
+          v-if="movie.poster_path"
+          :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
+          :alt="movie.title"
+          class="w-full rounded-md"
+        />
+        <div class="mt-2">
+          <span class="bg-green-500 text-white px-2 py-1 rounded-md text-sm">
+            {{ Math.round(movie.vote_average * 10) / 10 }}★
+          </span>
+          <h3 class="font-semibold mt-1">{{ movie.title }}</h3>
+          <p class="text-sm text-gray-500">{{ new Date(movie.release_date).toLocaleDateString() }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de Películas Populares -->
+  <section class="my-8">
+    <h2 class="text-2xl font-bold mb-4">Más Populares</h2>
+    
+    <div class="flex overflow-x-auto space-x-4">
+      <div
+        v-for="(movie, index) in movies"
+        :key="movie.id"
+        class="flex-none w-48 bg-white rounded-lg shadow-lg p-2"
+      >
+        <img
+          v-if="movie.poster_path"
+          :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
+          :alt="movie.title"
+          class="w-full rounded-md"
+        />
+        <div class="mt-2">
+          <span class="bg-green-500 text-white px-2 py-1 rounded-md text-sm">
+            {{ Math.round(movie.vote_average * 10) / 10 }}★
+          </span>
+          <h3 class="font-semibold mt-1">{{ movie.title }}</h3>
+          <p class="text-sm text-gray-500">{{ new Date(movie.release_date).toLocaleDateString() }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de Series -->
+  <section class="my-8">
+    <h2 class="text-2xl font-bold mb-4">Ver Series</h2>
+    <div class="flex overflow-x-auto space-x-4">
+      <div
+        v-for="(series, index) in allSeries"  <!-- Cambiado aquí para iterar sobre allSeries -->
+        :key="series.id"
+        class="flex-none w-48 bg-white rounded-lg shadow-lg p-2">
+        <img
+          v-if="series.poster_path"
+          :src="`https://image.tmdb.org/t/p/w500${series.poster_path}`"
+          :alt="series.name"
+          class="w-full rounded-md"
+        />
+        <div class="mt-2">
+          <span class="bg-green-500 text-white px-2 py-1 rounded-md text-sm">
+            {{ Math.round(series.vote_average * 10) / 10 }}★
+          </span>
+          <h3 class="font-semibold mt-1">{{ series.name }}</h3>
+          <p class="text-sm text-gray-500">{{ new Date(series.first_air_date).toLocaleDateString() }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
+
+<style scoped>
+section {
+  background-color: #f9f9f9;
+  padding: 20px;
+}
+
+.flex {
+  scrollbar-width: thin;
+}
+
+.flex::-webkit-scrollbar {
+  height: 8px;
+}
+
+.flex::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+</style>
