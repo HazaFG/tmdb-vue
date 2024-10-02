@@ -56,10 +56,11 @@
     <div class="mt-8 ml-8 mr-8 border">
       <h2 class="text-2xl ml-4 mt-4 font-semibold">Actores principales:</h2>
       <div class="flex overflow-x-auto space-x-4 py-4">
-        <div v-for="actor in getActors()" :key="actor.name" class="ml-4 mr-4 border p-2 rounded-lg text-center flex-shrink-0 w-48">
-          <img :src="imgBasePath + actor.profile_path" :alt="actor.name" class="w-full h-auto rounded-lg mb-1">
-          <p class="font-bold">{{ actor.name }}</p>
-          <p class="text-sm">{{ actor.character }}</p>
+        <div v-for="actor in getActors()":key="actor.name" class="ml-4 mr-4 border p-2 rounded-lg text-center flex-shrink-0 w-48 cursor-pointer"
+        @click="redirectToPerson(actor.id)">
+        <img :src="imgBasePath + actor.profile_path" :alt="actor.name" class="w-full h-auto rounded-lg mb-1">
+        <p class="font-bold">{{ actor.name }}</p>
+        <p class="text-sm">{{ actor.character }}</p>
         </div>
       </div>
     </div>
@@ -160,7 +161,7 @@ interface Movie {
 
 interface Credits {
   crew: { job: string; name: string }[];
-  cast: { name: string; character: string; profile_path: string; }[];
+  cast: { id:number; name: string; character: string; profile_path: string; }[];
 }
 
 interface Recommendations {
@@ -192,6 +193,10 @@ function redirectToGenre(genreId: number) {
 
 function redirectToMovie(movieId: number) {
   router.push(`/movie/${movieId}`);
+}
+
+function redirectToPerson(personId: number) {
+  router.push(`/person/${personId}`);
 }
 
 const route = useRoute();
@@ -262,6 +267,7 @@ function getScreenplay() {
 function getActors() {
   if (!credits.value) return [];
   return credits.value.cast.slice(0, 9).map(actor => ({
+    id: actor.id,
     name: actor.name,
     character: actor.character,
     profile_path: actor.profile_path

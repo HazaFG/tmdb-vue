@@ -1,11 +1,11 @@
 <template>
   <div v-if="person" class="max-w-7xl mx-auto p-6">
+    
     <div class="flex space-x-6 mb-8 border rounded-lg p-4">
       <img
         :src="imgBasePath + person.profile_path"
         :alt="person.name"
-        class="w-48 h-64 object-cover shadow-lg rounded-lg"
-      />
+        class="w-48 h-64 object-cover shadow-lg rounded-lg"/>
       <div>
         <h1 class="text-5xl font-bold">{{ person.name }}</h1>
         <p class="mt-2">{{ person.biography }}</p>
@@ -24,13 +24,15 @@
 
     <div class="mb-8 border rounded-lg p-4">
       <h2 class="text-2xl font-semibold">Conocido por:</h2>
+      
       <div class="flex overflow-x-auto space-x-4 py-4">
         <div
-          v-for="work in person.known_for"
+          v-for="work in knownForLimited"
           :key="work.id"
-          class="border p-2 rounded-lg text-center flex-shrink-0 w-48"
-        >
+          @click="redirectToWork(work)" 
+          class="border p-2 rounded-lg text-center flex-shrink-0 w-48 cursor-pointer">
           <img
+            v-if="work.poster_path"
             :src="imgBasePath + work.poster_path"
             :alt="work.title || work.name"
             class="w-full h-auto rounded-lg mb-1"
@@ -78,6 +80,7 @@ interface Person {
       title?: string;
       release_date?: string;
       media_type?: string;
+      poster_path?: string;
     }[];
   };
   tv_credits: {
@@ -86,6 +89,7 @@ interface Person {
       name?: string;
       first_air_date?: string;
       media_type?: string;
+      poster_path?: string;
     }[];
   };
 }
@@ -110,12 +114,16 @@ async function getPersonDetails(personId: string) {
   person.value = json;
 }
 
-// Función para obtener el año de lanzamiento
+const knownForLimited = computed(() => {
+  const movies = person.value?.movie_credits.cast.slice(0, 4) || [];
+  const tvShows = person.value?.tv_credits.cast.slice(0, 4) || [];
+  return [...movies, ...tvShows].slice(0, 8);//combina y limita a 8
+});
+
 function getReleaseYear(releaseDate: string | undefined): string {
   return releaseDate ? releaseDate.substring(0, 4) : 'Desconocido'; 
 }
 
-// Combina y ordena la filmografía
 const sortedFilmography = computed(() => {
   const movies = person.value?.movie_credits.cast.map(work => ({
     id: work.id,
@@ -140,9 +148,23 @@ const sortedFilmography = computed(() => {
   });
 });
 
-// Redirige a la película o serie correspondiente
-function redirectToWork(work: { id: number; media_type: string; title?: string; name?: string }) {
-  const path = work.media_type === 'movie' ? `/movie/${work.id}` : `/serie/${work.id}`;
+function redirectToWork(work: { id: number; media_type?: string; title?: string; name?: string }) {
+  //inferido o definido media_type
+  let mediaType = work.media_type;
+
+  //inferir si es película o serie
+  if (!mediaType) {
+    if (work.title) {
+      mediaType = 'movie'; 
+    } else if (work.name) {
+      mediaType = 'tv'; 
+    } else {
+      console.error('No se pudo determinar el tipo de medio para el trabajo:', work);
+      return;
+    }
+  }
+  //redirección usando el media_type inferido o definido
+  const path = mediaType === 'movie' ? `/movie/${work.id}` : `/serie/${work.id}`;
   router.push(path);
 }
 </script>
