@@ -1,61 +1,81 @@
 <template>
 
-    <div class="mt-4" v-if="movie">
+    <div v-if="movie">
       <div class="flex space-x-2">
-        <img loading="lazy" :src="imgBasePath + movie.poster_path" :alt="movie.title" />
-  
-        <div>
-          <h1 class="text-5xl font-bold">{{ movie.title }} ({{ getReleaseYear(movie.release_date) }}) </h1>
-          <p>Fecha de lanzamiento: {{ movie.release_date }} ({{ movie.original_language }})</p>
-          <p>Duracion: {{ movie.runtime }} minutos</p>
-          <p>Rating: {{ movie.vote_average }}</p>
+
+        <div class="relative w-full bg-fixed bg-center bg-cover bg-no-repeat p-6 text-white" 
+          :style="`background-image: url(${imgBasePath + movie.backdrop_path});`">
+        
+        <div class="absolute inset-0 bg-black bg-opacity-90"></div>
+        
+        <div class="relative flex space-x-6 max-w-7xl mx-auto">
+          <img :src="imgBasePath + movie.poster_path" 
+              :alt="movie.title" 
+              class="w-96 h-auto shadow-lg rounded-lg">
           
-          <button>Favorito</button>
+          <div>
+            <h1 class="text-5xl font-bold">{{ movie.title }} ({{ getReleaseYear(movie.release_date) }})</h1>
+            <p class="mt-2">Fecha de lanzamiento: {{ movie.release_date }} ({{ movie.original_language }})</p>
+            <p>Duración: {{ movie.runtime }} minutos</p>
+            <p>Rating: {{ movie.vote_average }}</p>
+            
+            <button class="bg-red-500 text-white px-4 py-2 mt-4 rounded-lg">Favorito</button>
 
-          <p>{{ movie.overview }}</p>
+            <p class="mt-8">{{ movie.overview }}</p>
 
-          <div class="mt-4">
-            <h2>Generos: </h2>
-            <ul>
-              <li v-for="genre in movie.genres" :key="genre.id">{{ genre.name }}</li>
-            </ul>
-          </div>
-  
-          <div class="mt-4">
-            <h2>Director: </h2>
-            <p>{{ getDirector() }}</p>
-          </div>
-  
-          <div class="mt-4">
-            <h2>Guionistas: </h2>
-            <p>{{ getScreenplay() }}</p>
-          </div>
+            <div class="mt-8">
+              <h2 class="text-2xl font-semibold">Géneros:</h2>
+              <ul>
+                <li v-for="genre in movie.genres" :key="genre.id">{{ genre.name }}</li>
+              </ul>
+            </div>
 
+            <div class="mt-8">
+              <h2 class="text-2xl font-semibold">Director:</h2>
+              <p>{{ getDirector() }}</p>
+            </div>
+
+            <div class="mt-4">
+              <h2 class="text-2xl font-semibold">Guionistas:</h2>
+              
+              <p>{{ getScreenplay() }}</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="flex space-x-2">
-        <div class="mt-4">
-            <h2>Actores principales: </h2>
-            <ul>
-              <li v-for="actor in getActors()" :key="actor">{{ actor }}</li>
-            </ul>
-          </div>
+    </div>
+
+    <div class="mt-8 ml-8 mr-8 border">
+      <h2 class="text-2xl ml-4 mt-4 font-semibold">Actores principales:</h2>
+      <div class="flex overflow-x-auto space-x-4 py-4">
+        <div v-for="actor in getActors()" :key="actor.name" class="ml-4 mr-4 border p-2 rounded-lg text-center flex-shrink-0 w-48">
+          <img :src="imgBasePath + actor.profile_path" :alt="actor.name" class="w-full h-auto rounded-lg mb-1">
+          <p class="font-bold">{{ actor.name }}</p>
+          <p class="text-sm">{{ actor.character }}</p>
+        </div>
       </div>
+    </div>
 
-      <div>
-        <p>Titulo Original: {{ movie.original_title }}</p>
-        <p>Estado: {{ movie.status }}</p>
-        <p>Idioma Original: {{ movie.original_language }}</p>
-        <p>Presupuesto: ${{ movie.budget.toLocaleString() }}</p>
-        <p>Ingresos: ${{ movie.revenue.toLocaleString() }}</p>
+    <div class="mt-8 ml-8 mr-8 border">
+      <h2 class="text-2xl ml-4 mt-4 font-semibold">Información adicional: </h2>
+        <p class="ml-4 mt-4">Titulo Original: {{ movie.original_title }}</p>
+        <p class="ml-4">Estado: {{ movie.status }}</p>
+        <p class="ml-4">Idioma Original: {{ movie.original_language }}</p>
+        <p class="ml-4">Presupuesto: ${{ movie.budget.toLocaleString() }}</p>
+        <p class="ml-4">Ingresos: ${{ movie.revenue.toLocaleString() }}</p>
 
-        <div class="mt-4">
-            <h2>Palabras clave: </h2>
-            <ul>
-              <li v-for="keyword in keywords?.keywords" :key="keyword.id">{{ keyword.name }}</li>
-            </ul>
-          </div>
+        <div class="mt-4 ml-4">
+          <h2 class="text-lg font-semibold">Palabras clave:</h2>
+          <ul class="flex flex-wrap space-x-2 mt-2">
+            <li v-for="keyword in keywords?.keywords" :key="keyword.id">
+              <span class="bg-blue-500 text-white rounded-full px-3 py-1 text-sm">
+                {{ keyword.name }}
+              </span>
+            </li>
+          </ul>
+        </div>
+
       </div>
 
       <div class="flex space-x-2">
@@ -102,7 +122,7 @@ interface Movie {
 
 interface Credits {
   crew: { job: string; name: string }[];
-  cast: { name: string; character: string }[];
+  cast: { name: string; character: string; profile_path: string; }[];
 }
 
 interface Recommendations {
@@ -154,22 +174,26 @@ async function getMovieDetails(movieId: string) {
 
 //director
 function getDirector() {
-  if (!credits.value) return '';
+  if (!credits.value) return 'Desconocido';
   const director = credits.value.crew.find(person => person.job === 'Director');
-  return director ? director.name : '';
+  return director ? director.name : 'Desconocido';
 }
 
 //guionista
 function getScreenplay() {
-  if (!credits.value) return '';
+  if (!credits.value) return 'Desconocido';
   const writers = credits.value.crew.filter(person => person.job === 'Screenplay');
-  return writers.map(writer => writer.name).join(', ');
+  return writers.length ? writers.map(writer => writer.name).join(', ') : 'Desconocido';
 }
 
 //actores maaaaaas prinsipales
 function getActors() {
   if (!credits.value) return [];
-  return credits.value.cast.slice(0, 9).map(actor => actor.name);
+  return credits.value.cast.slice(0, 9).map(actor => ({
+    name: actor.name,
+    character: actor.character,
+    profile_path: actor.profile_path
+  }));
 }
 
 function getReleaseYear(releaseDate: string) {
