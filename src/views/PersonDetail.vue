@@ -58,52 +58,21 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { useRoute, useRouter } from 'vue-router'; 
 import headers from '../globals';  
 import { ref, computed } from 'vue';
 
-interface Person {
-  id: number;
-  name: string;
-  biography: string;
-  profile_path: string;
-  known_for_department: string;
-  known_for: any[];
-  gender: number;
-  birthday: string;
-  place_of_birth: string;
-  also_known_as: string[];
-  movie_credits: {
-    cast: {
-      id: number;
-      title?: string;
-      release_date?: string;
-      media_type?: string;
-      poster_path?: string;
-    }[];
-  };
-  tv_credits: {
-    cast: {
-      id: number;
-      name?: string;
-      first_air_date?: string;
-      media_type?: string;
-      poster_path?: string;
-    }[];
-  };
-}
-
 const route = useRoute();
 const router = useRouter(); 
-const personId: string = route.params.id as string;
-const imgBasePath: string = "https://image.tmdb.org/t/p/w500";
-let person = ref<Person | null>(null);
+const personId = route.params.id;
+const imgBasePath = "https://image.tmdb.org/t/p/w500";
+let person = ref(null);
 
 getPersonDetails(personId);
 
-async function getPersonDetails(personId: string) {
-  const requestOptions: RequestInit = {
+async function getPersonDetails(personId) {
+  const requestOptions = {
     method: "GET",
     headers: headers,
     redirect: "follow"
@@ -117,10 +86,10 @@ async function getPersonDetails(personId: string) {
 const knownForLimited = computed(() => {
   const movies = person.value?.movie_credits.cast.slice(0, 4) || [];
   const tvShows = person.value?.tv_credits.cast.slice(0, 4) || [];
-  return [...movies, ...tvShows].slice(0, 8);//combina y limita a 8
+  return [...movies, ...tvShows].slice(0, 8); //combina y limita a 8
 });
 
-function getReleaseYear(releaseDate: string | undefined): string {
+function getReleaseYear(releaseDate) {
   return releaseDate ? releaseDate.substring(0, 4) : 'Desconocido'; 
 }
 
@@ -148,11 +117,9 @@ const sortedFilmography = computed(() => {
   });
 });
 
-function redirectToWork(work: { id: number; media_type?: string; title?: string; name?: string }) {
-  //inferido o definido media_type
+function redirectToWork(work) {
   let mediaType = work.media_type;
 
-  //inferir si es película o serie
   if (!mediaType) {
     if (work.title) {
       mediaType = 'movie'; 
@@ -163,7 +130,7 @@ function redirectToWork(work: { id: number; media_type?: string; title?: string;
       return;
     }
   }
-  //redirección usando el media_type inferido o definido
+
   const path = mediaType === 'movie' ? `/movie/${work.id}` : `/serie/${work.id}`;
   router.push(path);
 }
