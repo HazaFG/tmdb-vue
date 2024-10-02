@@ -8,7 +8,7 @@ import SerieDetail from "./views/SerieDetail.vue";
 import PersonDetail from "./views/PersonDetail.vue";
 import Login from "./views/Login.vue";
 
-export const API_KEY = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMDkzNTJkOTljNDI5OGE5MGYzZDAyYTAxYTI2NTNkMyIsIm5iZiI6MTcyNzIzMTI5OC4yNzExOTYsInN1YiI6IjY2ZjJmNTgzYzIzNzI1OGU0YzI3MGEyNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.UrQp6o6lfxbmCDcLsyPbS1jo-DV5oq0Ncz-wSJ5730w"
+export const API_KEY = "4e72051e3bc2c615ed21d74e9a55ac50"
 
 export const ROUTES = [
   { path: '/', component: HomeView },
