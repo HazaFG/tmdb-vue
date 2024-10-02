@@ -13,7 +13,14 @@
               <p class="mt-2">Fecha de estreno: {{ serie.first_air_date }} ({{ serie.original_language }})</p>
               <p>Número de temporadas: {{ serie.number_of_seasons }}</p>
               <p>Rating: {{ serie.vote_average }}</p>
-              <button class="bg-red-500 text-white px-4 py-2 mt-4 rounded-lg">Favorito</button>
+
+
+
+            <button :class="isFavorite ? 'bg-red-500' : 'bg-blue-500'" class="text-white px-4 py-2 mt-4 rounded-lg" 
+              @click="toggleFavorite">
+              {{ isFavorite ? 'Eliminar de favoritos' : 'Agregar a favoritos' }}
+            </button>
+
               <p class="mt-8">{{ serie.overview }}</p>
   
               <div class="mt-8">
@@ -50,7 +57,8 @@
       <div class="mt-8 ml-8 mr-8 border">
         <h2 class="text-2xl ml-4 mt-4 font-semibold">Actores principales:</h2>
         <div class="flex overflow-x-auto space-x-4 py-4">
-          <div v-for="actor in getActors()" :key="actor.name" class="ml-4 mr-4 border p-2 rounded-lg text-center flex-shrink-0 w-48">
+          <div v-for="actor in getActors()" :key="actor.name" class="ml-4 mr-4 border p-2 rounded-lg text-center flex-shrink-0 w-48 cursor-pointer"
+          @click="redirectToPerson(actor.id)">
             <img :src="imgBasePath + actor.profile_path" :alt="actor.name" class="w-full h-auto rounded-lg mb-1">
             <p class="font-bold">{{ actor.name }}</p>
             <p class="text-sm">{{ actor.character }}</p>
@@ -176,6 +184,10 @@ function redirectToSeason(seriesId: number, seasonNumber: number) {
   router.push(`/season-details/${seriesId}/${seasonNumber}`);
 }
 
+function redirectToPerson(personId: number) {
+  router.push(`/person/${personId}`);
+}
+
 
   
   const route = useRoute();
@@ -197,6 +209,25 @@ function redirectToSeason(seriesId: number, seasonNumber: number) {
   });
   
   getSerieDetails(serieId);
+
+  const isFavorite = ref(false);
+
+  function toggleFavorite() {
+
+if (!serie.value) return;
+
+const favoritos = JSON.parse(localStorage.getItem('favoritos') || '[]');
+const movieIndex = favoritos.findIndex((fav: Serie) => fav.id === serie.value.id);
+
+if (movieIndex === -1) {
+  favoritos.push(serie.value);
+  isFavorite.value = true;
+} else {
+  favoritos.splice(movieIndex, 1);
+  isFavorite.value = false;
+}
+localStorage.setItem('favoritos', JSON.stringify(favoritos));
+}
   
   async function getSerieDetails(serieId: string) {
       const requestOptions: RequestInit = {
@@ -241,10 +272,15 @@ function redirectToSeason(seriesId: number, seasonNumber: number) {
       return serie.value.created_by ? serie.value.created_by.map((creator: any) => creator.name).join(', ') : 'Desconocido';
   }
   
-  function getActors() {
-      if (!credits.value) return [];
-      return credits.value.cast.slice(0, 5); // Retornar los primeros 5 actores
-  }
+function getActors() {
+  if (!credits.value) return [];
+  return credits.value.cast.slice(0, 9).map(actor => ({
+    id: actor.id,
+    name: actor.name,
+    character: actor.character,
+    profile_path: actor.profile_path
+  }));
+}
   
   function getReleaseYear(date: string) {
       return new Date(date).getFullYear();

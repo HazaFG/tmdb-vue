@@ -6,6 +6,11 @@ const username = ref("");
 const password = ref("");
 const isAuthenticated = ref(localStorage.getItem("isAuthenticated") === "true");
 
+// Define el API_KEY según si el usuario está autenticado o no
+const API_KEY = isAuthenticated.value
+  ? "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0ZTcyMDUxZTNiYzJjNjE1ZWQyMWQ3NGU5YTU1YWM1MCIsIm5iZiI6MTcyNzg2MzgzNC40Mjc0MTMsInN1YiI6IjY2ZjJmNjM3NzMwMGE1YmEyMTNjMGEwYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.6dR_FDwJCugqXDkN91dLQQ0aAlTOnYkAz7B1m15j2fA"
+  : "";
+
 // Función para iniciar sesión
 function loginRequest() {
   if (username.value === "hazaelfg" && password.value === "palodecarnazadelpolito") {
