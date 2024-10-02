@@ -5,6 +5,7 @@ import MoviesFiltered from "./views/MoviesFiltered.vue";
 import SeasonDetails from "./views/SeasonDetails.vue";
 import MovieDetail from "./views/MovieDetail.vue";
 import PersonDetail from "./views/PersonDetail.vue";
+import Login from "./views/Login.vue";
 
 export const API_KEY = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMDkzNTJkOTljNDI5OGE5MGYzZDAyYTAxYTI2NTNkMyIsIm5iZiI6MTcyNzIzMTI5OC4yNzExOTYsInN1YiI6IjY2ZjJmNTgzYzIzNzI1OGU0YzI3MGEyNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.UrQp6o6lfxbmCDcLsyPbS1jo-DV5oq0Ncz-wSJ5730w"
 
@@ -16,6 +17,7 @@ export const ROUTES = [
   { path: '/movies/category/:category_id', component: CategoriesDetails },
   { path: '/movie/:id', component: MovieDetail },
   { path: '/person/:id', component: PersonDetail },
+  { path: '/login', component: Login },
 ]
 
 const headers = new Headers();

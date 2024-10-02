@@ -22,7 +22,7 @@ defineProps<{ episode: Episode }>()
       </summary>
       <div class="columns-3 group-open:mt-4">
         <div class="max-h-fit break-inside-avoid-column" v-for="star in episode.guest_stars">
-          <RouterLink class="" :to="'/person/id/' + star.id">
+          <RouterLink class="" :to="'/person/' + star.id">
             <img class="after:content-['a'] rounded w-16 sm:w-24" :src="imgBasePath + star.profile_path" alt=""
               v-if="star.profile_path">
             <span class="text-[0.75rem] sm:text-xl" v-if="star.profile_path">{{ star.name }}</span>

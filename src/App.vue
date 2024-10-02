@@ -8,7 +8,7 @@
     <div class="text-xl font-bold">
       <RouterLink to="/">Cuevano movies</RouterLink>
     </div>
-    
+
     <!-- Menú de navegación -->
     <div class="flex space-x-4">
       <RouterLink class="hover:text-gray-400 transition-colors" to="/">Home</RouterLink>
@@ -17,6 +17,7 @@
       <RouterLink class="hover:text-gray-400 transition-colors" to="/movies/category/28">Category</RouterLink>
       <RouterLink class="hover:text-gray-400 transition-colors" to="/movie/1079091">Movie Details</RouterLink>
       <RouterLink class="hover:text-gray-400 transition-colors" to="/person/552252">Person Details</RouterLink>
+      <RouterLink class="hover:text-gray-400 transition-colors" to="/login">loginn</RouterLink>
     </div>
   </nav>
 
